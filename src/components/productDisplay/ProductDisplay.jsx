@@ -171,6 +171,7 @@ const ProductDisplay = (props) => {
                 action: "Add to Cart",
                 label: `Product: ${product.name}`,
                 value: product.price, // Add value if it's meaningful
+                // nonInteraction: true ,
               });
               dispatch(addTohandler({ ...product, size: selectedSize }));
             }}
