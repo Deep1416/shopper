@@ -14,7 +14,17 @@ import women_banner from "./Assets/banner_women.png";
 import kid_banner from "./Assets/banner_kids.png";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReactGA from "react-ga4";
+import { useEffect } from "react";
 function App() {
+  useEffect(() => {
+    ReactGA.initialize("G-R5T84KTP11");
+    ReactGA.send({
+      hitType: "pageview",
+      page: window.location.pathname,
+      title: "App.jsx",
+    });
+  }, []);
   return (
     <>
       <Router>
