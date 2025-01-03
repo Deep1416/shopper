@@ -168,7 +168,7 @@ const ProductDisplay = (props) => {
             onClick={() => {
               ReactGA.event({
                 category: "Ecommerce",
-                action: "Add to Cart1",
+                action: "Add to Cart",
                 label: `Product: ${product.name}`,
                 value: product.price, // Add value if it's meaningful
               });

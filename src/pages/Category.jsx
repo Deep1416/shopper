@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dropdown_icon from "../Assets/dropdown_icon.png";
 import { Items } from "../components";
 import all_product from "../Assets/all_product";
-
+import PropTypes from "prop-types";
 const Category = (props) => {
   const [sortPrice, setSortPrice] = useState([]);
   const [arrowDown, setArrowDown] = useState(false);
@@ -20,6 +20,11 @@ const Category = (props) => {
       .sort((a, b) => a.new_price - b.new_price);
     setSortPrice(sortedProducts);
   };
+  useEffect(() => {
+    if (props.onCategoryView) {
+      props.onCategoryView();
+    }
+  }, [props.onCategoryView]);
 
   return (
     <div className="pb-16">
@@ -38,7 +43,8 @@ const Category = (props) => {
               SORT BY
             </span>{" "}
             <span className="flex items-center gap-2 text-[10px] md:text-base text-gray-400">
-              poplar <img src={dropdown_icon} className="text-gray-300" alt="" />
+              poplar{" "}
+              <img src={dropdown_icon} className="text-gray-300" alt="" />
             </span>{" "}
           </div>
           {arrowDown && (
@@ -56,35 +62,38 @@ const Category = (props) => {
         </div>
       </div>
       <div className="my-[40px] mx-[124px] gap-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 md:gap-5 justify-items-center">
-        {sortPrice.length > 0 ? (
-          sortPrice.map((item, i) => props.items === item.category ? (
-            <Items
-              key={i}
-              id={item.id}
-              name={item.name}
-              image={item.image}
-              new_price={item.new_price}
-              old_price={item.old_price}
-            />
-          ) : null
-        )
-        ) : (
-          all_product.map((item, i) =>
-            props.items === item.category ? (
-              <Items
-                key={i}
-                id={item.id}
-                name={item.name}
-                image={item.image}
-                new_price={item.new_price}
-                old_price={item.old_price}
-              />
-            ) : null
-          )
-        )}
+        {sortPrice.length > 0
+          ? sortPrice.map((item, i) =>
+              props.items === item.category ? (
+                <Items
+                  key={i}
+                  id={item.id}
+                  name={item.name}
+                  image={item.image}
+                  new_price={item.new_price}
+                  old_price={item.old_price}
+                />
+              ) : null
+            )
+          : all_product.map((item, i) =>
+              props.items === item.category ? (
+                <Items
+                  key={i}
+                  id={item.id}
+                  name={item.name}
+                  image={item.image}
+                  new_price={item.new_price}
+                  old_price={item.old_price}
+                />
+              ) : null
+            )}
       </div>
     </div>
   );
 };
-
+Category.propTypes = {
+  onCategoryView: PropTypes.func,
+  banner: PropTypes.string,
+  items: PropTypes.string,
+};
 export default Category;

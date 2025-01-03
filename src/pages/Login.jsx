@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { auth, db } from "../firbase/Config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ReactGA from "react-ga4";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const handleSign = async () => {
     try {
+      ReactGA.event({
+        category: "Authentication",
+        action: "Login Attempt",
+        label: email,
+      });
       const user = await signInWithEmailAndPassword(auth, email, password);
       // const user = await createUserWithEmailAndPassword(auth, email, password);
       const userObj = {
@@ -21,6 +27,11 @@ const Login = () => {
       const userRefrence = collection(db, "userDetails");
       addDoc(userRefrence, userObj);
       localStorage.setItem("userDetails", JSON.stringify(userObj));
+      ReactGA.event({
+        category: "Authentication",
+        action: "Login Success",
+        label: email,
+      });
       toast.dismiss();
       toast.success("Login successfully", {
         position: "top-center",
@@ -40,6 +51,12 @@ const Login = () => {
       // const errorMessage = error.message;
       // console.log(errorMessage, errorCode);
       // alert("failed");
+      ReactGA.event({
+        category: "Authentication",
+        action: "Login Failed",
+        label: email,
+        value: error.code || 0, // Optionally log the error code
+      });
       toast.dismiss();
       toast.error("Enter Valid Email and Password", {
         position: "top-center",
