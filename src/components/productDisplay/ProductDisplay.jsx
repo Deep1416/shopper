@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { addToSize } from "../../redux/Size";
 import { toast } from "react-toastify";
+import ReactGA from "react-ga4";
 const ProductDisplay = (props) => {
   const { product } = props;
   const [selectedSize, setSelectedSize] = useState("");
@@ -51,6 +52,14 @@ const ProductDisplay = (props) => {
       navigate("/login");
     }
   };
+  function showToast() {
+    toast("Item added to wishlist!");
+    ReactGA.event({
+      category: "Wishlist",
+      action: "Item Added",
+      label: "Product ID: 12345",
+    });
+  }
   return (
     <div className="flex flex-wrap md:flex-nowrap my-0 md:mx-[170px] mx-5">
       <div className="flex gap-[17px]">
@@ -156,22 +165,38 @@ const ProductDisplay = (props) => {
               scale: 0.9,
             }}
             className="py-2 px-2 md:py-5 md:px-10 w-[150px] md:w-[200px] text-base text-white font-semibold bg-[#ff4141] mb-10 border-none outline-none"
-            onClick={() =>
-              dispatch(addTohandler({ ...product, size: selectedSize }))
-            }
+            onClick={() => {
+              ReactGA.event({
+                category: "Ecommerce",
+                action: "Add to Cart",
+                label: `Product: ${product.name}`,
+                value: product.price, // Add value if it's meaningful
+              });
+              dispatch(addTohandler({ ...product, size: selectedSize }));
+            }}
           >
             ADD TO Cart
           </motion.button>
+
           <motion.button
             animate={{
               scale: 0.9,
             }}
             className="py-2 md:py-5 md:px-10 w-[100px] md:w-[200px] text-base text-white font-semibold bg-[#ff4141] mb-10 border-none outline-none"
-            onClick={() => addTowhsliLogin(product)}
+            onClick={() => {
+              ReactGA.event({
+                category: "Wishlist",
+                action: "Add to Wishlist",
+                label: `Product: ${product.name}`,
+              });
+              addTowhsliLogin(product);
+              showToast;
+            }}
           >
             Whislist
           </motion.button>
         </div>
+
         <p className="mt-[10px] ">
           <span className="font-semibold">Category :</span>Women , T-shirt ,
           Crop Top
